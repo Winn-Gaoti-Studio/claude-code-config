@@ -1,0 +1,20 @@
+# This repo tracks ONLY a curated allowlist of config files (see README).
+# These patterns are a defensive guard against accidentally committing
+# secrets or local runtime state.
+.credentials.json
+*.local.json
+*.local
+*.env
+.env
+*.log
+.DS_Store
+
+# Leftover nested git worktree checkouts (created under .claude/ during dev).
+.claude/
+
+# The status line script is maintained in terrence-kira/claude-statusline,
+# not vendored here (see README). Guard against re-adding a local copy.
+statusline.sh
+
+# Local-only tooling, not part of the shared baseline.
+weekly-cc-summary/

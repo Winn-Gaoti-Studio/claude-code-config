@@ -1,0 +1,255 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "COLORTERM": "truecolor",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "sonnet[1m]"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(echo:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(head:*)",
+      "Bash(ls:*)",
+      "Bash(readlink:*)",
+      "Bash(tail:*)",
+      "Bash(tee:*)",
+      "Bash(tree:*)",
+      "Bash(wc:*)",
+      "Bash(git add:*)",
+      "Bash(git check-ignore:*)",
+      "Bash(git checkout:*)",
+      "Bash(git commit:*)",
+      "Bash(git diff:*)",
+      "Bash(git fetch:*)",
+      "Bash(git log:*)",
+      "Bash(git mv:*)",
+      "Bash(git push:*)",
+      "Bash(git rebase:*)",
+      "Bash(git show:*)",
+      "Bash(git status:*)",
+      "Bash(gh api:*)",
+      "Bash(gh auth:*)",
+      "Bash(gh issue list:*)",
+      "Bash(gh label create:*)",
+      "Bash(gh label delete:*)",
+      "Bash(gh label list:*)",
+      "Bash(gh pr:*)",
+      "Bash(gh repo list:*)",
+      "Bash(gh run view:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm dlx:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm ls:*)",
+      "Bash(pnpm changeset:*)",
+      "Bash(pnpm build:*)",
+      "Bash(pnpm check:*)",
+      "Bash(pnpm fix:*)",
+      "Bash(pnpm typecheck:*)",
+      "Bash(pnpm turbo run typecheck:*)",
+      "Bash(pnpm turbo run fix:*)",
+      "Bash(pnpm turbo run check:*)",
+      "Bash(pnpm turbo run check\\:strict:*)",
+      "Bash(pnpm exec biome check:*)",
+      "Bash(pnpm biome check:*)",
+      "Bash(npx biome:*)",
+      "Bash(npx tsc:*)",
+      "Bash(mackup list:*)",
+      "Bash(starship config:*)",
+      "Bash(starship explain:*)",
+      "Read(~/.claude/**)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:agentskills.io)",
+      "WebFetch(domain:ai-sdk.dev)",
+      "WebFetch(domain:biomejs.dev)",
+      "WebFetch(domain:developers.notion.com)",
+      "WebFetch(domain:docs.browser-use.com)",
+      "WebFetch(domain:uploads.linear.app)",
+      "WebFetch(domain:www.linkedin.com)",
+      "WebFetch(domain:www.radix-ui.com)",
+      "Skill(code-check)",
+      "Skill(code-review:code-review)",
+      "Skill(commit-commands:commit)",
+      "Skill(commit-commands:commit-push-pr)",
+      "Skill(claude-md-management:claude-md-improver)",
+      "Skill(claude-md-management:revise-claude-md)",
+      "Skill(pr-review-toolkit:review-pr)",
+      "mcp__plugin_context7_context7__*",
+      "mcp__plugin_linear_linear__search_documentation",
+      "mcp__plugin_linear_linear__list_teams",
+      "mcp__plugin_linear_linear__list_issue_labels",
+      "mcp__plugin_linear_linear__get_project",
+      "mcp__plugin_linear_linear__list_issues",
+      "mcp__plugin_linear_linear__save_issue",
+      "mcp__plugin_Notion_notion__notion-fetch",
+      "mcp__pencil__*",
+      "mcp__ide__*"
+    ],
+    "deny": [],
+    "ask": [
+      "Bash(rm:*)"
+    ],
+    "defaultMode": "acceptEdits",
+    "additionalDirectories": []
+  },
+  "model": "opus",
+  "skillOverrides": {
+    "claude-api:brand-guidelines": "off",
+    "claude-api:theme-factory": "off"
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/auto-assign-pr.sh\"",
+            "if": "Bash(gh pr create*)",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$HOME/.claude/hooks/context-compact-reminder.sh\"",
+            "timeout": 10,
+            "statusMessage": "Checking context usage..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -n \"$SUPERSET_HOME_DIR\" ] && [ -x \"$SUPERSET_HOME_DIR/hooks/notify.sh\" ] && \"$SUPERSET_HOME_DIR/hooks/notify.sh\" || true"
+          }
+        ]
+      }
+    ]
+  },
+  "worktree": {
+    "baseRef": "fresh"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$HOME/.claude/statusline.sh\"",
+    "refreshInterval": 30
+  },
+  "enabledPlugins": {
+    "context7@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "claude-md-management@claude-plugins-official": true,
+    "pr-review-toolkit@claude-plugins-official": true,
+    "feature-dev@claude-plugins-official": false,
+    "claude-api@anthropic-agent-skills": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "playwright@claude-plugins-official": true,
+    "andrej-karpathy-skills@karpathy-skills": true,
+    "linear@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "slack@claude-plugins-official": true,
+    "notion@claude-plugins-official": true,
+    "sentry@claude-plugins-official": true,
+    "posthog@claude-plugins-official": true,
+    "security-guidance@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      },
+      "autoUpdate": true
+    },
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      },
+      "autoUpdate": true
+    },
+    "superpowers": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers"
+      }
+    },
+    "karpathy-skills": {
+      "source": {
+        "source": "git",
+        "url": "http://github.com/forrestchang/andrej-karpathy-skills.git"
+      },
+      "autoUpdate": true
+    },
+    "tavily-plugins": {
+      "source": {
+        "source": "git",
+        "url": "https://github.com/tavily-ai/skills.git"
+      },
+      "autoUpdate": true
+    }
+  },
+  "outputStyle": "Formal",
+  "language": "Simplified Chinese (简体中文)",
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "xhigh",
+  "autoDreamEnabled": true,
+  "theme": "dark",
+  "teammateMode": "auto",
+  "remoteControlAtStartup": false,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true
+}
