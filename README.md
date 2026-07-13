@@ -1,72 +1,72 @@
 # claude-code-config
 
-A curated snapshot of my [Claude Code](https://docs.claude.com/en/docs/claude-code) global configuration (the
-contents of `~/.claude`), shared as a recommended baseline.
+A privacy-safe, curated snapshot of portable
+[Claude Code](https://docs.claude.com/en/docs/claude-code) configuration.
 
-This repository is a **reference**, not an installer. Nothing here will touch
-your machine unless you copy a file yourself. Review each piece, take what you
-like, and never blindly overwrite your own `~/.claude`.
+The private chezmoi dotfiles repository is the canonical source. This repository
+is a reference for sharing selected configuration, not an installer and not a
+complete copy of `~/.claude`. Review every file before adopting it.
 
-## What lives here, and where it goes
+## Shared payload
 
-Each tracked file maps to the same relative path under `~/.claude`:
+Each payload file maps to the same relative path under `~/.claude`:
 
-- **`CLAUDE.md`** → `~/.claude/CLAUDE.md` — global agent guidelines applied to
-  every project (communication style, git workflow, code style, behavioral
-  guardrails).
-- **`settings.json`** → `~/.claude/settings.json` — main settings: model and
-  effort defaults, theme, enabled plugins, hooks, status line, permissions, and
-  a few non-secret environment variables. Contains personal preferences; treat
-  it as a starting point rather than a drop-in.
-- **`keybindings.json`** → `~/.claude/keybindings.json` — custom key bindings.
-- **`output-styles/formal.md`** → `~/.claude/output-styles/formal.md` — a custom
-  output style ("Formal") selectable via `/output-style`.
-- **`hooks/auto-assign-pr.sh`**, **`hooks/context-compact-reminder.sh`** →
-  `~/.claude/hooks/` — hook scripts referenced from `settings.json`.
+- `settings.json` — a filtered portable baseline for models, effort, public
+  plugins, hooks, permissions, and status lines.
+- `keybindings.json` — custom key bindings.
+- `hooks/auto-assign-pr.sh` — safely adds draft and self-assignee options to
+  direct `gh pr create` commands.
+- `hooks/context-compact-reminder.sh` — emits tiered context reminders using
+  the status line's local context cache.
+- `agents/executor.md` — a scoped delegated execution agent.
 
-## Recommended plugins
+`AGENTS.md`, `CLAUDE.md`, `README.md`, `scripts/`, and `tests/` are
+repository-maintenance metadata rather than files to copy into `~/.claude`.
 
-These are the plugins I keep enabled, grouped by the marketplace they come from.
-Add a marketplace, then install the plugins from it.
+## Status lines
 
-**`anthropics/claude-plugins-official`** (marketplace `claude-plugins-official`):
-`context7`, `code-review`, `commit-commands`, `claude-md-management`,
-`pr-review-toolkit`, `typescript-lsp`, `playwright`, `linear`, `superpowers`,
-`slack`, `notion`, `sentry`, `posthog`, `security-guidance`.
-
-**`anthropics/skills`** (marketplace `anthropic-agent-skills`): `claude-api`.
-
-**`forrestchang/andrej-karpathy-skills`** (marketplace `karpathy-skills`):
-`andrej-karpathy-skills`.
-
-## Recommended standalone skills
-
-A few third-party skills live under `~/.claude/skills/`. They are not vendored
-here — install them from their own marketplaces so attribution and updates stay
-intact:
-
-- **Tavily suite** (`tavily-search`, `tavily-extract`, `tavily-crawl`,
-  `tavily-map`, `tavily-research`, `tavily-cli`, `tavily-best-practices`,
-  `tavily-dynamic-search`) — from `tavily-ai/skills`.
-- **`find-skills`** — helps discover and install additional skills.
-
-## Status line
-
-The custom status line lives in its own repository,
-[`terrence-kira/claude-statusline`](https://github.com/terrence-kira/claude-statusline),
-so its updates and attribution stay there rather than being vendored here. The
-`statusLine` block in `settings.json` still points at `~/.claude/statusline.sh`;
-install or update that script from the upstream repo:
+The main and subagent status lines are published separately in
+[Gaotity/claude-statusline](https://github.com/Gaotity/claude-statusline).
+The `statusLine` and `subagentStatusLine` settings in this snapshot expect
+that bundle to be installed.
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/terrence-kira/claude-statusline/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/Gaotity/claude-statusline/main/install.sh | bash
 ```
 
-## What is intentionally excluded
+## Maintainer sync
 
-To keep this safe to share, everything outside the allowlist above is excluded —
-in particular conversation transcripts (`projects/`, `sessions/`,
-`transcripts/`, `history.jsonl`), caches and runtime state (`cache/`, `daemon*`,
-`security/`, `telemetry/`), credentials, and any machine-specific install paths
-(e.g. the raw `plugins/installed_plugins.json`, whose contents are summarized
-above as a recommended-install list instead).
+The maintainer script reads an explicit allowlist from the chezmoi source:
+
+```bash
+scripts/sync-from-chezmoi.sh --check
+scripts/sync-from-chezmoi.sh --write
+```
+
+Use `--source <path>` for fixtures or an alternate source root. The script
+never writes to chezmoi.
+
+The checked-in jq filter rejects unknown settings fields and only exports:
+
+- `CLAUDE_CODE_SUBAGENT_MODEL` from `env`
+- `allow` and `defaultMode` from permissions
+- the two included hook commands
+- plugins from reviewed public marketplaces
+- GitHub-backed marketplace definitions
+
+Run all tests before committing:
+
+```bash
+bash tests/sync-from-chezmoi.sh
+bash tests/hooks.smoke.sh
+```
+
+## Intentionally excluded
+
+The snapshot excludes credentials, API keys, OAuth tokens, sessions,
+transcripts, history, caches, telemetry, plugin runtime state, project trust,
+machine-specific paths, work-only configuration, local `.codex/` settings, and
+any source field that has not been explicitly classified for safe publication.
+
+The user's full global agent guidance is also excluded because it contains
+machine and workflow policy that is not part of this portable baseline.

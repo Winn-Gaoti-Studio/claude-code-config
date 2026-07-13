@@ -12,9 +12,12 @@
 # Leftover nested git worktree checkouts (created under .claude/ during dev).
 .claude/
 
-# The status line script is maintained in terrence-kira/claude-statusline,
+# The status-line bundle is maintained in Gaotity/claude-statusline,
 # not vendored here (see README). Guard against re-adding a local copy.
 statusline.sh
+subagent-statusline.sh
+lib/statusline-cache.sh
 
 # Local-only tooling, not part of the shared baseline.
 weekly-cc-summary/
+.codex/
