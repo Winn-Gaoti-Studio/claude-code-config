@@ -23,6 +23,12 @@ Each payload file maps to the same relative path under `~/.claude`:
 `AGENTS.md`, `CLAUDE.md`, `README.md`, `scripts/`, and `tests/` are
 repository-maintenance metadata rather than files to copy into `~/.claude`.
 
+## Codex project defaults
+
+The repository tracks `.codex/config.toml` separately from the Claude Code
+payload. It provides portable project-local Codex model and reasoning defaults
+and is not copied into `~/.claude` by the maintainer sync.
+
 ## Status lines
 
 The main and subagent status lines are published separately in
@@ -65,8 +71,10 @@ bash tests/hooks.smoke.sh
 
 The snapshot excludes credentials, API keys, OAuth tokens, sessions,
 transcripts, history, caches, telemetry, plugin runtime state, project trust,
-machine-specific paths, work-only configuration, local `.codex/` settings, and
+machine-specific paths, work-only configuration, unreviewed Codex settings, and
 any source field that has not been explicitly classified for safe publication.
+Within `.codex/`, only the reviewed project-local `config.toml` is included;
+Codex sessions, caches, authentication, and runtime state remain excluded.
 
 The user's full global agent guidance is also excluded because it contains
 machine and workflow policy that is not part of this portable baseline.
