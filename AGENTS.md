@@ -20,6 +20,10 @@ The exported payload is limited to:
 Repository metadata such as this file, `CLAUDE.md`, `README.md`, tests, and
 maintainer scripts is not installed under `~/.claude`.
 
+The repository also tracks `.codex/config.toml` for portable project-local
+Codex model and reasoning defaults. It is not part of the exported Claude Code
+payload.
+
 ## Maintenance
 
 ```bash
@@ -38,7 +42,8 @@ export.
 
 - Never publish credentials, tokens, sessions, transcripts, history, caches,
   plugin runtime state, absolute identity paths, or work-only configuration.
-- Keep `.codex/` and local tooling out of Git.
+- Track only portable model and reasoning defaults in `.codex/config.toml`;
+  keep all other Codex runtime state and local tooling out of Git.
 - Do not edit exported payload files independently of the chezmoi source.
 - Preserve unrelated changes.
 - Add failing tests before behavior changes.

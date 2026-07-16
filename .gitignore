@@ -20,4 +20,3 @@ lib/statusline-cache.sh
 
 # Local-only tooling, not part of the shared baseline.
 weekly-cc-summary/
-.codex/
