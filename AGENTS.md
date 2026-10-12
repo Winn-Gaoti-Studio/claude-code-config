@@ -5,9 +5,10 @@ Docs and Git commits must be in English. Respond to users in Simplified Chinese.
 ## Repository Purpose
 
 This repository is a privacy-safe, curated publication subset of the user's
-Claude Code configuration. The private chezmoi source is canonical; this
-repository is a reference snapshot, not an installer or an independent source of
-truth.
+Claude Code configuration. Harness is the maintained source; this repository is a historical reference snapshot,
+not an installer or an independent source of truth. Selected examples and the validation filter are moving to
+`Gaotity/harness`. Keep this snapshot publicly available until a reviewed replacement is publicly accessible.
+Then update the replacement link and archive it. Do not archive it while the replacement is private.
 
 The exported payload is limited to:
 
@@ -27,11 +28,14 @@ payload.
 ## Maintenance
 
 ```bash
-scripts/sync-from-chezmoi.sh --check
-scripts/sync-from-chezmoi.sh --write
 bash tests/sync-from-chezmoi.sh
 bash tests/hooks.smoke.sh
 ```
+
+The sync script is historical and its original source paths no longer exist. Its fixture tests remain useful; do not
+sync current chezmoi or harness configuration into this snapshot. The two legacy hooks are not adopted by the new
+examples: current harness has a post-creation assignment hook, and the maintained statusline has retired context-cache
+handoff. Make new sample and filter changes in harness.
 
 The settings filter is fail-closed. New top-level keys, environment variables,
 permission fields, hook events, hook commands, plugin marketplaces, private
@@ -44,7 +48,7 @@ export.
   plugin runtime state, absolute identity paths, or work-only configuration.
 - Track only portable model and reasoning defaults in `.codex/config.toml`;
   keep all other Codex runtime state and local tooling out of Git.
-- Do not edit exported payload files independently of the chezmoi source.
+- Preserve the historical payload; maintained configuration examples belong in harness.
 - Preserve unrelated changes.
 - Add failing tests before behavior changes.
 - Run every test and review the staged diff before committing.
